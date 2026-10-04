@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRS NEXORA — موقع التحقق</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/nexora.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C3AED'/%3E%3Cstop offset='1' stop-color='%2322D3EE'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M32 14c-10.5 0-19 7.4-19 16.5 0 5.2 2.8 9.8 7.2 12.9L18 52l9.7-4.2c1.4.3 2.8.5 4.3.5 10.5 0 19-7.4 19-16.8S42.5 14 32 14z' fill='%23fff'/%3E%3Cpath d='M26 30.5l4.5 4.5L39 26' stroke='%237C3AED' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<main class="card">
+  <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient></defs>
+    <rect width="64" height="64" rx="16" fill="url(#g)"/>
+    <path d="M32 14c-10.5 0-19 7.4-19 16.5 0 5.2 2.8 9.8 7.2 12.9L18 52l9.7-4.2c1.4.3 2.8.5 4.3.5 10.5 0 19-7.4 19-16.8S42.5 14 32 14z" fill="#fff"/>
+    <path d="M26 30.5l4.5 4.5L39 26" stroke="#7C3AED" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="brand-name">DRS NEXORA</div>
+  <div class="brand-tagline">مراسلة مشفّرة طرف-لطرف • خاصة بك 100%</div>
+
+  <section id="state-welcome">
+    <div class="icon-badge info">✉</div>
+    <h1 class="state-title">موقع التحقق الرسمي</h1>
+    <p class="state-text">
+      هنا تُستكمل خطوات حسابك في تطبيق DRS NEXORA: تأكيد البريد الإلكتروني بعد إنشاء الحساب،
+      وتعيين كلمة مرور جديدة عند نسيانها.
+    </p>
+    <div class="divider"></div>
+    <ul class="steps">
+      <li><span class="num">1</span><span><b>أنشأت حساباً؟</b> افتح رسالة «تأكيد التسجيل» في بريدك واضغط زر التفعيل — ستعود إلى صفحة تأكيد هنا.</span></li>
+      <li><span class="num">2</span><span><b>نسيت كلمة المرور؟</b> من شاشة تسجيل الدخول في التطبيق اضغط «نسيت كلمة المرور؟» ثم استخدم الرابط في الرسالة التي تصلك.</span></li>
+    </ul>
+    <p class="state-text" style="font-size:13px; margin-top:14px;">
+      إن فتحت هذه الصفحة من رسالة بريد إلكتروني، سيتم توجيهك تلقائياً إلى الخطوة المناسبة.
+    </p>
+  </section>
+
+  <p class="footer-note">
+    لا تشارك روابط التحقق مع أي شخص — كل رابط يعمل لحسابك ولمرة واحدة.
+  </p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // توجيه تلقائي حسب نوع عملية التحقق القادمة في الرابط:
+  // #access_token=...&type=signup  → confirm.html
+  // #access_token=...&type=recovery|invite → reset.html
+  // ?token_hash=...&type=...       → الصفحة المناسبة
+  function paramType(s) {
+    if (!s) return '';
+    var str = String(s);
+    if (str.charAt(0) === '#' || str.charAt(0) === '?') str = str.slice(1);
+    var parts = str.split('&');
+    for (var i = 0; i < parts.length; i++) {
+      var kv = parts[i].split('=');
+      if (kv[0] === 'type') return decodeURIComponent(kv[1] || '');
+    }
+    return '';
+  }
+
+  var type = paramType(window.location.hash) || paramType(window.location.search);
+  var hasTokens = /access_token=/.test(window.location.hash) || /token_hash=/.test(window.location.search) || /token=/.test(window.location.search);
+
+  if (hasTokens || type) {
+    var target;
+    if (type === 'recovery' || type === 'invite') target = 'reset.html';
+    else target = 'confirm.html'; // signup و email_change وأي نوع آخر
+    // إبقاء الهاش/الاستعلام كما هو حتى تقرأه الصفحة الهدف
+    window.location.replace(target + window.location.search + window.location.hash);
+  }
+})();
+</script>
+</body>
+</html>

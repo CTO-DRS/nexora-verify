@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>تأكيد التسجيل — DRS NEXORA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/nexora.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C3AED'/%3E%3Cstop offset='1' stop-color='%2322D3EE'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M32 14c-10.5 0-19 7.4-19 16.5 0 5.2 2.8 9.8 7.2 12.9L18 52l9.7-4.2c1.4.3 2.8.5 4.3.5 10.5 0 19-7.4 19-16.8S42.5 14 32 14z' fill='%23fff'/%3E%3Cpath d='M26 30.5l4.5 4.5L39 26' stroke='%237C3AED' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<main class="card">
+  <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient></defs>
+    <rect width="64" height="64" rx="16" fill="url(#g)"/>
+    <path d="M32 14c-10.5 0-19 7.4-19 16.5 0 5.2 2.8 9.8 7.2 12.9L18 52l9.7-4.2c1.4.3 2.8.5 4.3.5 10.5 0 19-7.4 19-16.8S42.5 14 32 14z" fill="#fff"/>
+    <path d="M26 30.5l4.5 4.5L39 26" stroke="#7C3AED" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="brand-name">DRS NEXORA</div>
+  <div class="brand-tagline">مراسلة مشفّرة طرف-لطرف • خاصة بك 100%</div>
+
+  <!-- حالة الانتظار -->
+  <section id="state-loading">
+    <div class="spinner"></div>
+    <h1 class="state-title">جارٍ تفعيل حسابك…</h1>
+    <p class="state-text">لحظات ونؤكد لك نتيجة التفعيل. لا تغلق هذه الصفحة.</p>
+  </section>
+
+  <!-- حالة النجاح -->
+  <section id="state-success" class="hidden">
+    <div class="icon-badge success">✓</div>
+    <h1 class="state-title success-text">تم تفعيل حسابك بنجاح</h1>
+    <p class="state-text" id="success-email">أصبح بريدك الإلكتروني مفعّلاً ويمكنك الآن استخدام التطبيق.</p>
+    <div class="divider"></div>
+    <ul class="steps">
+      <li><span class="num">1</span><span>افتح تطبيق <b>DRS NEXORA</b> على هاتفك.</span></li>
+      <li><span class="num">2</span><span>سجّل الدخول ببريدك الإلكتروني وكلمة المرور التي أنشأتها عند التسجيل.</span></li>
+      <li><span class="num">3</span><span>ابدأ محادثاتك — التشفير طرف-لطرف مُفعّل تلقائياً.</span></li>
+    </ul>
+  </section>
+
+  <!-- حالة الخطأ -->
+  <section id="state-error" class="hidden">
+    <div class="icon-badge error">!</div>
+    <h1 class="state-title error-text" id="error-title">تعذّر تفعيل الحساب</h1>
+    <p class="state-text" id="error-text"></p>
+    <div class="divider"></div>
+    <ul class="steps" id="error-steps"></ul>
+  </section>
+
+  <p class="footer-note">
+    هذه الصفحة تابعة رسمياً لتطبيق DRS NEXORA للتحقق من البريد الإلكتروني فقط.<br>
+    لا تشارك روابط التحقق مع أي شخص.
+  </p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  'use strict';
+
+  var SUPABASE_URL = 'https://mlwyybitgqnlfokdfiuv.supabase.co';
+  var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4GihXypoTZ8n2IRA9C9z7w_yD09JmTv';
+
+  var client = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: { persistSession: false, detectSessionInUrl: false }
+  });
+
+  var elLoading = document.getElementById('state-loading');
+  var elSuccess = document.getElementById('state-success');
+  var elError   = document.getElementById('state-error');
+
+  function show(state) {
+    elLoading.classList.add('hidden');
+    elSuccess.classList.add('hidden');
+    elError.classList.add('hidden');
+    state.classList.remove('hidden');
+  }
+
+  function paramsFrom(hashOrSearch) {
+    var out = {};
+    var s = String(hashOrSearch || '');
+    if (s.charAt(0) === '#' || s.charAt(0) === '?') s = s.slice(1);
+    s.split('&').forEach(function (kv) {
+      if (!kv) return;
+      var i = kv.indexOf('=');
+      if (i < 0) { out[kv] = ''; return; }
+      out[decodeURIComponent(kv.slice(0, i))] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, ' '));
+    });
+    return out;
+  }
+
+  function fail(title, text, steps) {
+    document.getElementById('error-title').textContent = title;
+    document.getElementById('error-text').textContent = text;
+    var ul = document.getElementById('error-steps');
+    ul.innerHTML = '';
+    (steps || []).forEach(function (s, i) {
+      var li = document.createElement('li');
+      var n = document.createElement('span');
+      n.className = 'num'; n.textContent = String(i + 1);
+      var body = document.createElement('span');
+      body.innerHTML = s;
+      li.appendChild(n); li.appendChild(body);
+      ul.appendChild(li);
+    });
+    show(elError);
+  }
+
+  function succeed(email) {
+    var p = document.getElementById('success-email');
+    if (email) {
+      p.textContent = 'تم تفعيل البريد الإلكتروني: ' + email + ' — يمكنك الآن استخدام التطبيق.';
+    }
+    show(elSuccess);
+  }
+
+  function arabicError(p) {
+    var code = (p.error_code || p.error || '').toLowerCase();
+    var desc = (p.error_description || '').toLowerCase();
+    if (code.indexOf('otp_expired') >= 0 || desc.indexOf('expired') >= 0) {
+      return {
+        title: 'انتهت صلاحية رابط التفعيل',
+        text: 'روابط تفعيل البريد الإلكتروني صالحة لفترة محدودة، وهذا الرابط لم يعد صالحاً أو استُخدم سابقاً.',
+        steps: [
+          'افتح تطبيق DRS NEXORA.',
+          'من شاشة <b>إنشاء حساب</b> أدخل نفس البريد الإلكتروني وكلمة المرور ثم اضغط زر الإنشاء.',
+          'ستصلك رسالة تفعيل جديدة — استخدمها خلال مدة صلاحيتها.'
+        ]
+      };
+    }
+    return {
+      title: 'تعذّر تفعيل الحساب',
+      text: 'الرابط غير صالح — قد يكون ناقصاً أو استُخدم من قبل. تأكد من فتح الرسالة على نفس الجهاز واضغط زر التفعيل الموجود داخلها.',
+      steps: [
+        'أعد فتح رسالة التفعيل واضغط الزر الموجود فيها مرة أخرى.',
+        'إن تكررت المشكلة: افتح التطبيق وأنشئ الحساب من جديد بنفس البريد لتصلك رسالة جديدة.'
+      ]
+    };
+  }
+
+  async function main() {
+    var frag = paramsFrom(window.location.hash);
+    var query = paramsFrom(window.location.search);
+
+    // خطأ قادم من إعادة توجيه Supabase داخل الهاش
+    if (frag.error || frag.error_description) {
+      var e = arabicError(frag);
+      return fail(e.title, e.text, e.steps);
+    }
+
+    try {
+      // الحالة 1: إعادة توجيه مع رموز الجلسة داخل الهاش (التدفق الافتراضي)
+      if (frag.access_token && frag.refresh_token) {
+        var gu = await client.auth.getUser(frag.access_token);
+        if (gu.error || !gu.data || !gu.data.user) {
+          return fail('تعذّر تفعيل الحساب',
+            'لم نتمكن من التحقق من صحة الرابط. قد يكون استُخدم سابقاً.',
+            ['أعد فتح رسالة التفعيل واضغط زر التفعيل مرة أخرى.']);
+        }
+        if (!gu.data.user.email_confirmed_at && !gu.data.user.confirmed_at) {
+          return fail('لم يتم التأكيد بعد',
+            'هذا الحساب ما زال بانتظار التأكيد. استخدم زر التفعيل داخل رسالة البريد الإلكتروني.',
+            []);
+        }
+        return succeed(gu.data.user.email);
+      }
+
+      // الحالة 2: رمز خام في الاستعلام (token_hash) — تدفق بديل
+      var th = query.token_hash || query.token;
+      var type = query.type || 'signup';
+      if (th) {
+        var vo = await client.auth.verifyOtp({ token_hash: th, type: type });
+        if (vo.error) {
+          var e2 = arabicError({ error_code: vo.error.code || '', error_description: vo.error.message || '' });
+          return fail(e2.title, e2.text, e2.steps);
+        }
+        return succeed(vo.data && vo.data.user ? vo.data.user.email : '');
+      }
+
+      // لا رموز ولا خطأ: رابط مفتوح مباشرة بلا سياق
+      return fail('لا يوجد رابط تفعيل',
+        'وصلت إلى صفحة التحقق مباشرة بدون بيانات تفعيل.',
+        ['لتفعيل حسابك: افتح رسالة «تأكيد التسجيل» في بريدك الإلكتروني واضغط زر التفعيل داخلها.']);
+    } catch (err) {
+      return fail('حدث خطأ غير متوقع',
+        'تعذّر إكمال التحقق الآن. تحقق من اتصالك بالإنترنت وأعد تحميل الصفحة.',
+        ['أعد تحميل الصفحة.', 'إن استمرت المشكلة أعد فتح رابط التفعيل من رسالة البريد.']);
+    }
+  }
+
+  main();
+})();
+</script>
+</body>
+</html>

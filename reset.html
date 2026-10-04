@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>تعيين كلمة المرور — DRS NEXORA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/nexora.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C3AED'/%3E%3Cstop offset='1' stop-color='%2322D3EE'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M32 14c-10.5 0-19 7.4-19 16.5 0 5.2 2.8 9.8 7.2 12.9L18 52l9.7-4.2c1.4.3 2.8.5 4.3.5 10.5 0 19-7.4 19-16.8S42.5 14 32 14z' fill='%23fff'/%3E%3Cpath d='M26 30.5l4.5 4.5L39 26' stroke='%237C3AED' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<main class="card">
+  <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient></defs>
+    <rect width="64" height="64" rx="16" fill="url(#g)"/>
+    <path d="M32 14c-10.5 0-19 7.4-19 16.5 0 5.2 2.8 9.8 7.2 12.9L18 52l9.7-4.2c1.4.3 2.8.5 4.3.5 10.5 0 19-7.4 19-16.8S42.5 14 32 14z" fill="#fff"/>
+    <path d="M26 30.5l4.5 4.5L39 26" stroke="#7C3AED" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="brand-name">DRS NEXORA</div>
+  <div class="brand-tagline">مراسلة مشفّرة طرف-لطرف • خاصة بك 100%</div>
+
+  <!-- حالة الانتظار -->
+  <section id="state-loading">
+    <div class="spinner"></div>
+    <h1 class="state-title">جارٍ التحقق من الرابط…</h1>
+    <p class="state-text">لا تغلق هذه الصفحة حتى تكتمل العملية.</p>
+  </section>
+
+  <!-- نموذج تعيين كلمة المرور -->
+  <section id="state-form" class="hidden">
+    <div class="icon-badge info">🔒</div>
+    <h1 class="state-title">تعيين كلمة مرور جديدة</h1>
+    <p class="state-text">اختر كلمة مرور قوية جديدة لحسابك، ثم اضغط «حفظ كلمة المرور».</p>
+
+    <form id="reset-form" novalidate>
+      <div class="field">
+        <label for="password">كلمة المرور الجديدة</label>
+        <div class="input-wrap">
+          <input type="password" id="password" autocomplete="new-password" inputmode="text" dir="ltr">
+          <button type="button" class="toggle-eye" id="eye1" aria-label="إظهار كلمة المرور">👁</button>
+        </div>
+        <div class="strength"><span id="bar"></span></div>
+        <div class="hint" id="hint1">٨ أحرف على الأقل، ويُفضّل مزج الأحرف والأرقام والرموز.</div>
+      </div>
+
+      <div class="field">
+        <label for="password2">تأكيد كلمة المرور</label>
+        <div class="input-wrap">
+          <input type="password" id="password2" autocomplete="new-password" dir="ltr">
+          <button type="button" class="toggle-eye" id="eye2" aria-label="إظهار كلمة المرور">👁</button>
+        </div>
+        <div class="hint" id="hint2"></div>
+      </div>
+
+      <button type="submit" class="btn" id="submit-btn">حفظ كلمة المرور</button>
+    </form>
+  </section>
+
+  <!-- حالة النجاح -->
+  <section id="state-success" class="hidden">
+    <div class="icon-badge success">✓</div>
+    <h1 class="state-title success-text">تم تحديث كلمة المرور</h1>
+    <p class="state-text">كلمة المرور الجديدة فعّالة الآن على حسابك.</p>
+    <div class="divider"></div>
+    <ul class="steps">
+      <li><span class="num">1</span><span>افتح تطبيق <b>DRS NEXORA</b> على هاتفك.</span></li>
+      <li><span class="num">2</span><span>سجّل الدخول ببريدك الإلكتروني و<b>كلمة المرور الجديدة</b>.</span></li>
+    </ul>
+  </section>
+
+  <!-- حالة الخطأ -->
+  <section id="state-error" class="hidden">
+    <div class="icon-badge error">!</div>
+    <h1 class="state-title error-text" id="error-title">تعذّر إكمال العملية</h1>
+    <p class="state-text" id="error-text"></p>
+    <div class="divider"></div>
+    <ul class="steps" id="error-steps"></ul>
+  </section>
+
+  <p class="footer-note">
+    هذه الصفحة تابعة رسمياً لتطبيق DRS NEXORA لإعادة تعيين كلمة المرور فقط.<br>
+    إن لم تطلب تغيير كلمة المرور فتجاهل أي رسالة فيها رابط لهذه الصفحة — لن يتغير شيء على حسابك.
+  </p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  'use strict';
+
+  var SUPABASE_URL = 'https://mlwyybitgqnlfokdfiuv.supabase.co';
+  var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4GihXypoTZ8n2IRA9C9z7w_yD09JmTv';
+
+  var client = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: { persistSession: false, detectSessionInUrl: false }
+  });
+
+  var elLoading = document.getElementById('state-loading');
+  var elForm    = document.getElementById('state-form');
+  var elSuccess = document.getElementById('state-success');
+  var elError   = document.getElementById('state-error');
+
+  function show(state) {
+    elLoading.classList.add('hidden');
+    elForm.classList.add('hidden');
+    elSuccess.classList.add('hidden');
+    elError.classList.add('hidden');
+    state.classList.remove('hidden');
+  }
+
+  function paramsFrom(hashOrSearch) {
+    var out = {};
+    var s = String(hashOrSearch || '');
+    if (s.charAt(0) === '#' || s.charAt(0) === '?') s = s.slice(1);
+    s.split('&').forEach(function (kv) {
+      if (!kv) return;
+      var i = kv.indexOf('=');
+      if (i < 0) { out[kv] = ''; return; }
+      out[decodeURIComponent(kv.slice(0, i))] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, ' '));
+    });
+    return out;
+  }
+
+  function fail(title, text, steps) {
+    document.getElementById('error-title').textContent = title;
+    document.getElementById('error-text').textContent = text;
+    var ul = document.getElementById('error-steps');
+    ul.innerHTML = '';
+    (steps || []).forEach(function (s, i) {
+      var li = document.createElement('li');
+      var n = document.createElement('span');
+      n.className = 'num'; n.textContent = String(i + 1);
+      var body = document.createElement('span');
+      body.innerHTML = s;
+      li.appendChild(n); li.appendChild(body);
+      ul.appendChild(li);
+    });
+    show(elError);
+  }
+
+  function arabicError(p) {
+    var code = (p.error_code || p.error || '').toLowerCase();
+    var desc = (p.error_description || '').toLowerCase();
+    if (code.indexOf('otp_expired') >= 0 || desc.indexOf('expired') >= 0) {
+      return {
+        title: 'انتهت صلاحية الرابط',
+        text: 'روابط إعادة تعيين كلمة المرور صالحة لفترة محدودة، وهذا الرابط لم يعد صالحاً أو استُخدم سابقاً.',
+        steps: [
+          'افتح تطبيق DRS NEXORA.',
+          'من شاشة تسجيل الدخول اضغط <b>«نسيت كلمة المرور؟»</b> وأدخل بريدك.',
+          'ستصلك رسالة جديدة — افتحها واستخدم الرابط خلال مدة صلاحيتها.'
+        ]
+      };
+    }
+    return {
+      title: 'الرابط غير صالح',
+      text: 'قد يكون الرابط ناقصاً أو استُخدم من قبل.',
+      steps: [
+        'أعد فتح رسالة إعادة تعيين كلمة المرور واضغط الزر داخلها مرة أخرى.',
+        'إن تكررت المشكلة اطلب رسالة جديدة من التطبيق عبر «نسيت كلمة المرور؟».'
+      ]
+    };
+  }
+
+  // ------- عناصر النموذج -------
+  var pw1 = document.getElementById('password');
+  var pw2 = document.getElementById('password2');
+  var hint1 = document.getElementById('hint1');
+  var hint2 = document.getElementById('hint2');
+  var bar = document.getElementById('bar');
+  var submitBtn = document.getElementById('submit-btn');
+
+  function bindEye(btnId, inputId) {
+    var btn = document.getElementById(btnId);
+    var input = document.getElementById(inputId);
+    btn.addEventListener('click', function () {
+      var isVisible = input.type === 'text';
+      input.type = isVisible ? 'password' : 'text';
+      btn.textContent = isVisible ? '👁' : '🙈';
+    });
+  }
+  bindEye('eye1', 'password');
+  bindEye('eye2', 'password2');
+
+  function strength(v) {
+    var s = 0;
+    if (v.length >= 8) s++;
+    if (v.length >= 12) s++;
+    if (/[A-Za-z]/.test(v) && /\d/.test(v)) s++;
+    if (/[^A-Za-z0-9]/.test(v)) s++;
+    return s; // 0..4
+  }
+
+  pw1.addEventListener('input', function () {
+    var v = pw1.value;
+    var s = strength(v);
+    var widths = ['0%', '30%', '55%', '80%', '100%'];
+    var colors = ['#f87171', '#f87171', '#f59e0b', '#22d3ee', '#34d399'];
+    bar.style.width = widths[s];
+    bar.style.background = colors[s];
+    if (v.length === 0) { hint1.textContent = '٨ أحرف على الأقل، ويُفضّل مزج الأحرف والأرقام والرموز.'; hint1.classList.remove('error'); }
+    else if (v.length < 8) { hint1.textContent = 'كلمة المرور قصيرة — تحتاج ٨ أحرف على الأقل.'; hint1.classList.add('error'); }
+    else { hint1.textContent = 'طول مناسب ✓'; hint1.classList.remove('error'); }
+  });
+
+  document.getElementById('reset-form').addEventListener('submit', async function (ev) {
+    ev.preventDefault();
+    hint2.textContent = '';
+    hint2.classList.remove('error');
+
+    if (pw1.value.length < 8) {
+      hint1.textContent = 'كلمة المرور يجب ألا تقل عن ٨ أحرف.';
+      hint1.classList.add('error');
+      pw1.focus();
+      return;
+    }
+    if (pw1.value !== pw2.value) {
+      hint2.textContent = 'الكلمتان غير متطابقتين — تأكد من الإدخال.';
+      hint2.classList.add('error');
+      pw2.focus();
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جارٍ الحفظ…';
+    try {
+      var res = await client.auth.updateUser({ password: pw1.value });
+      if (res.error) {
+        var msg = res.error.message || '';
+        var text = 'تعذّر حفظ كلمة المرور. ';
+        if (msg.toLowerCase().indexOf('password') >= 0 && msg.toLowerCase().indexOf('least') >= 0) {
+          text += 'كلمة المرور أقصر من الحد المسموح في الخادم — اختر كلمة أطول.';
+        } else if (msg.toLowerCase().indexOf('session') >= 0 || msg.toLowerCase().indexOf('auth') >= 0) {
+          text = 'انتهت صلاحية جلسة التحقق. أعد طلب رسالة تغيير كلمة المرور من التطبيق.';
+        } else {
+          text += 'تحقق من اتصالك بالإنترنت وأعد المحاولة.';
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'حفظ كلمة المرور';
+        hint2.textContent = text;
+        hint2.classList.add('error');
+        return;
+      }
+      show(elSuccess);
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'حفظ كلمة المرور';
+      hint2.textContent = 'حدث خطأ غير متوقع — تحقق من اتصالك بالإنترنت وأعد المحاولة.';
+      hint2.classList.add('error');
+    }
+  });
+
+  async function main() {
+    var frag = paramsFrom(window.location.hash);
+    var query = paramsFrom(window.location.search);
+
+    if (frag.error || frag.error_description) {
+      var e = arabicError(frag);
+      return fail(e.title, e.text, e.steps);
+    }
+
+    try {
+      var session = null;
+
+      // الحالة 1: رموز الجلسة داخل الهاش (إعادة التوجيه الافتراضية)
+      if (frag.access_token && frag.refresh_token) {
+        var ss = await client.auth.setSession({
+          access_token: frag.access_token,
+          refresh_token: frag.refresh_token
+        });
+        if (ss.error || !ss.data || !ss.data.session) {
+          return fail('الرابط غير صالح', 'لم نتمكن من بدء جلسة التحقق — قد يكون الرابط قد استُخدم سابقاً.',
+            ['أعد طلب رسالة تغيير كلمة المرور من التطبيق عبر «نسيت كلمة المرور؟».']);
+        }
+        session = ss.data.session;
+      }
+
+      // الحالة 2: رمز خام في الاستعلام (token_hash)
+      else {
+        var th = query.token_hash || query.token;
+        var type = query.type || 'recovery';
+        if (th) {
+          var vo = await client.auth.verifyOtp({ token_hash: th, type: type });
+          if (vo.error) {
+            var e2 = arabicError({ error_code: vo.error.code || '', error_description: vo.error.message || '' });
+            return fail(e2.title, e2.text, e2.steps);
+          }
+          session = vo.data && vo.data.session ? vo.data.session : null;
+        }
+      }
+
+      if (!session) {
+        return fail('لا يوجد رابط تعيين كلمة مرور',
+          'وصلت إلى صفحة التحقق مباشرة بدون بيانات تحقق.',
+          ['لإعادة تعيين كلمة مرورك: افتح التطبيق ← شاشة تسجيل الدخول ← «نسيت كلمة المرور؟» ثم استخدم الرابط في الرسالة التي تصلك.']);
+      }
+
+      show(elForm);
+    } catch (err) {
+      return fail('حدث خطأ غير متوقع',
+        'تعذّر إكمال التحقق الآن. تحقق من اتصالك بالإنترنت وأعد تحميل الصفحة.',
+        ['أعد تحميل الصفحة.', 'أو اطلب رسالة جديدة من التطبيق عبر «نسيت كلمة المرور؟».']);
+    }
+  }
+
+  main();
+})();
+</script>
+</body>
+</html>
