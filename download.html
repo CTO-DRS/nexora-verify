@@ -71,6 +71,27 @@
     </ul>
 
     <p class="mirror-line">إصلاح هذه النسخة: انهيار «RangeError» عند أول إقلاع كان يُبقي التطبيق عالقاً على شاشة البداية.</p>
+
+    <div class="divider"></div>
+
+    <div style="background:rgba(124,58,237,.10);border:1px solid rgba(124,58,237,.45);border-radius:14px;padding:16px 18px;margin-top:6px;">
+      <p style="margin:0 0 8px;font-weight:700;color:#c4b5fd;">إصلاح «تعذر فتح المحادثة — تحقق من الاتصال» (مطلوب)</p>
+      <p style="margin:0 0 12px;font-size:14px;line-height:1.8;color:#e9e4ff;">
+        سبب المشكلة: قاعدة البيانات ناقصة كائنات خادمية — وليست الإنترنت.
+        افتح لوحة Supabase → <b>SQL Editor</b> → New query، ثم انسخ محتوى
+        الملف التالي كاملاً والصقه واضغط <b>Run</b> (مرة واحدة تكفي، وهو آمن
+        لإعادة التشغيل):
+      </p>
+      <a class="dl-btn dl-primary" href="patch-chat-fix.sql" download style="display:flex;">
+        <span>📄</span>
+        <span>فتح ملف الإصلاح SQL (انسخ محتواه كاملاً)</span>
+        <span class="arrow">←</span>
+      </a>
+      <p style="margin:10px 0 0;font-size:12.5px;color:#b7a8ef;">
+        إن لم يفتح الملف مباشرة فأضف عليه: افتح الرابط ثم Ctrl+A ثم Ctrl+C والصقه في SQL Editor.
+        بعد التشغيل جرّب: البحث عن مستخدم ← «إرسال رسالة» — ستعمل، وقائمة «محادثاتي» ستبدأ بالتحميل من الخادم.
+      </p>
+    </div>
   </section>
 
   <p class="footer-note">
