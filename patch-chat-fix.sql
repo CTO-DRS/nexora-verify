@@ -131,7 +131,7 @@ $$;
 create or replace function public.get_my_chats()
 returns json language sql stable security definer set search_path = public
 as $$
-  select coalesce(json_agg(row), '[]'::json)
+  select coalesce(json_agg(s.*), '[]'::json)
   from (
     select
       c.id,
