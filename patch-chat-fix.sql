@@ -1,20 +1,33 @@
 -- ============================================================
--- DRS NEXORA — 2026-10-07
--- Patch: fix "تعذر فتح المحادثة — تحقق من الاتصال" + bring the
--- live database from v5.0.0-partial up to the v5.5.0 server contract.
+-- DRS NEXORA — 2026-10-07 (rev.2 — after live E2E proof, same day)
+-- Patch: fix "تعذر فتح المحادثة — تحقق من الاتصال" + complete the
+-- live database to the v5.5.x server contract.
 --
--- Root cause (probed live 2026-10-07 via PostgREST):
---   1. The owner's schema run aborted mid-way through the functions
---      section. Missing RPCs: register_device, topup_one_time_prekeys,
---      acknowledge_opk_consumed (all v5.0.0) — plus everything v5.1+:
---      get_my_chats (was NEVER defined in ANY schema version — phantom
---      RPC the app calls since v5.0.0), presence_heartbeat, get_presence.
---   2. Missing tables: read_marks, presence, push_tokens.
---   3. chats_direct_pair_unique (unique index on (user_a,user_b)
---      where type='direct') — required by the ON CONFLICT clause of
---      get_or_create_direct_chat. If absent, EVERY direct-chat open
---      fails with 42P10 and the app showed the misleading
---      "تحقق من الاتصال" message.
+-- ROOT CAUSE — VERIFIED LIVE 2026-10-07 with a REAL session
+-- (two admin-created probe users, real JWTs, real RPC call):
+--   1. get_or_create_direct_chat(p_other) → 42P10
+--      "there is no unique or exclusion constraint matching the
+--       ON CONFLICT specification".
+--      The unique index chats_direct_pair_unique is PARTIAL
+--      (where type='direct'), but the INSERT's conflict target was
+--      (user_a, user_b) WITHOUT the matching predicate — PostgreSQL
+--      cannot infer a partial index from a bare column list.
+--      So EVERY direct-chat open failed server-side and the app
+--      showed the misleading "تحقق من الاتصال" message.
+--      (The same latent bug existed in schema.sql itself — fixed
+--      here in both places: conflict target now carries
+--      "where type = 'direct'".)
+--   2. get_my_chats() → PGRST202: the RPC the app has called since
+--      v5.0.0 was NEVER defined in any schema version (that is why
+--      "محادثاتي" never loaded from the server).
+--   3. presence_heartbeat/get_presence → PGRST202; tables read_marks,
+--      presence, push_tokens missing on live.
+--   4. Verified HEALTHY on live (no action needed, definitions
+--      refreshed idempotently anyway): register_device (4-param
+--      signature, 204 OK with a real device row), chats table
+--      columns, chat_members + message_receipts FK/unique
+--      constraints (FK-violation probe proved the CREATE TABLE
+--      completed with its constraints).
 --
 -- 100% IDEMPOTENT — safe to run multiple times.
 -- Run in: Supabase Dashboard → SQL Editor → paste all → Run.
@@ -28,10 +41,11 @@ alter table public.chats add column if not exists last_message_at timestamptz;
 alter table public.chats add column if not exists invite_code text;
 
 -- ------------------------------------------------------------
--- 2) THE critical index — canonical direct pair.
---    Without it: get_or_create_direct_chat fails on every call
---    with "no unique or exclusion constraint matching the ON
---    CONFLICT specification" (42P10).
+-- 2) THE critical index — canonical direct pair (PARTIAL by design:
+--    group chats keep user_a/user_b NULL, so they never collide).
+--    The function below now references it WITH the required
+--    predicate "where type = 'direct'" — without that predicate
+--    PostgreSQL cannot infer a partial index and raises 42P10.
 -- ------------------------------------------------------------
 create unique index if not exists chats_direct_pair_unique
   on public.chats (user_a, user_b)
@@ -87,8 +101,11 @@ begin
 
   insert into public.chats (type, user_a, user_b, created_by)
   values ('direct', lo, hi, lo)
-  on conflict (user_a, user_b) do update set updated_at = now()
-    where chats.type = 'direct'
+  -- THE FIX (rev.2): the conflict target MUST carry the index
+  -- predicate, otherwise the PARTIAL unique index
+  -- chats_direct_pair_unique cannot be inferred → 42P10.
+  on conflict (user_a, user_b) where type = 'direct'
+  do update set updated_at = now()
   returning id into cid;
 
   if cid is null then
