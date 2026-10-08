@@ -34,7 +34,7 @@
   </svg>
   <div class="brand-name">DRS NEXORA</div>
   <div class="brand-tagline">مراسلة مشفّرة طرف-لطرف • خاصة بك 100%</div>
-  <div class="ver-badge">الإصدار v5.6.1 — إصلاح شريط كتابة الرسائل، بنية موقّعة رسمياً</div>
+  <div class="ver-badge">الإصدار v5.7.0 — حزمة الميزات التنافسية + إصلاح شريط الكتابة، بنية موقّعة رسمياً</div>
 
   <section id="state-download">
     <div class="icon-badge info">⬇</div>
@@ -44,10 +44,10 @@
       <b>دون صفحات وسيطة أو إعلانات</b>.
     </p>
 
-    <a class="dl-btn dl-primary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v5.6.1/app-arm64-v8a-release.apk" download>
+    <a class="dl-btn dl-primary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v5.7.0/app-arm64-v8a-release.apk" download>
       <span>⬇</span>
       <span>النسخة الموصى بها — أغلب الهواتف الحديثة
-        <span class="arch">ARM64 (arm64-v8a) • 38.4 MB • v5.6.1</span>
+        <span class="arch">ARM64 (arm64-v8a) • 39.8 MB • v5.7.0</span>
       </span>
       <span class="arrow">←</span>
     </a>
@@ -60,7 +60,7 @@
       <span class="arrow">←</span>
     </a>
 
-    <p class="hash-note">MD5 (arm64 v5.6.1): e38328144bf70fd830f03a50a8302058<br>الشهادة نفسها في كل الإصدارات (SHA-256): ae74add0…fa6b</p>
+    <p class="hash-note">MD5 (arm64 v5.7.0): fb3dcd89f3a77bf1965c67091d3f1e40<br>SHA-256: e6b049639c9f30ac687f82e4917ca1d45cc9034c90e1da4f780c9c28606757e6<br>الشهادة نفسها في كل الإصدارات (SHA-256): ae74add0…fa6b</p>
 
     <div class="divider"></div>
 
@@ -70,26 +70,13 @@
       <li><span class="num">3</span><span>بعد التثبيت: أنشئ حساباً ببريدك، أكّد البريد من الرسالة التي تصلك، ثم سجّل الدخول.</span></li>
     </ul>
 
-    <p class="mirror-line">إصلاح هذه النسخة (v5.6.1): شريط كتابة الرسائل — النص التوجيهي لم يعد يُقصّ أو يتداخل مع الأزرار، هوامش آمنة سفلية، واتجاه RTL سليم لسهم الإرسال. كما يشمل إصلاحات v5.6.0 السابقة (RangeError عند الإقلاع وإعدادات الملف الشخصي).</p>
+    <p class="mirror-line">جديد v5.7.0: تثبيت وكتم وأرشفة المحادثات، بانر الرسالة المثبتة، وسم «مُعاد توجيهه»، آخر ظهور، ثيم داكن/فاتح/النظام، وفتح المحادثة عند نقر الإشعار — إضافة إلى إصلاح v5.6.1 لشريط كتابة الرسائل.</p>
 
     <div class="divider"></div>
 
-    <div style="background:rgba(124,58,237,.10);border:1px solid rgba(124,58,237,.45);border-radius:14px;padding:16px 18px;margin-top:6px;">
-      <p style="margin:0 0 8px;font-weight:700;color:#c4b5fd;">إصلاح «تعذر فتح المحادثة — تحقق من الاتصال» (مطلوب)</p>
-      <p style="margin:0 0 12px;font-size:14px;line-height:1.8;color:#e9e4ff;">
-        سبب المشكلة: قاعدة البيانات ناقصة كائنات خادمية — وليست الإنترنت.
-        افتح لوحة Supabase → <b>SQL Editor</b> → New query، ثم انسخ محتوى
-        الملف التالي كاملاً والصقه واضغط <b>Run</b> (مرة واحدة تكفي، وهو آمن
-        لإعادة التشغيل):
-      </p>
-      <a class="dl-btn dl-primary" href="patch-chat-fix.sql" download style="display:flex;">
-        <span>📄</span>
-        <span>فتح ملف الإصلاح SQL (انسخ محتواه كاملاً)</span>
-        <span class="arrow">←</span>
-      </a>
-      <p style="margin:10px 0 0;font-size:12.5px;color:#b7a8ef;">
-        إن لم يفتح الملف مباشرة فأضف عليه: افتح الرابط ثم Ctrl+A ثم Ctrl+C والصقه في SQL Editor.
-        بعد التشغيل جرّب: البحث عن مستخدم ← «إرسال رسالة» — ستعمل، وقائمة «محادثاتي» ستبدأ بالتحميل من الخادم.
+    <div style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.35);border-radius:14px;padding:14px 18px;margin-top:6px;">
+      <p style="margin:0;font-size:13px;line-height:1.8;color:#a5e8f2;">
+        ✅ إصلاحات قاعدة البيانات السابقة (فتح المحادثات، الأعلام، آخر ظهور) أصبحت مُطبّقة تلقائياً على الخادم — لا حاجة لأي خطوة يدوية مع هذه النسخة.
       </p>
     </div>
   </section>
