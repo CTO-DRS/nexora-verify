@@ -1,0 +1,103 @@
+name: build-and-release
+
+# بناء رسمي لـ DRS NEXORA: يسحب كود المصدر من المستودع الخاص (drs-nexora)
+# عبر سر PRIVATE_REPO_TOKEN، يبني 3 حزم APK موقّعة بشهادة الإنتاج، يتحقق
+# من هوية التوقيع (حارس آلي)، ثم ينشئ Release عاماً بهذه الحزم — ليُنزَّل
+# من صفحة التحميل (GitHub Pages) مباشرة.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout private source (drs-nexora @ v0.1.0)
+        uses: actions/checkout@v4
+        with:
+          repository: CTO-DRS/drs-nexora
+          ref: v0.1.0
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          path: source
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.35.1'
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Pub get
+        working-directory: source
+        run: flutter pub get
+
+      - name: Unit tests
+        working-directory: source
+        run: flutter test
+
+      # Universal = arm32 + arm64 (بدون x86_64) — يطابق تخطيط صفحة التحميل
+      - name: Build universal APK (signed)
+        working-directory: source
+        run: flutter build apk --release --target-platform android-arm,android-arm64
+
+      - name: Build split APKs (signed)
+        working-directory: source
+        run: flutter build apk --release --split-per-abi --target-platform android-arm,android-arm64
+
+      # حارس التوقيع: الشهادة يجب أن تكون هوية الإنتاج الحالية —
+      # مفتاح خاطئ يثبَّت على الأجهزة الجديدة لكنه يُفشل كل التحديث فوق النسخ القديمة
+      - name: Stage APKs + signing guard
+        working-directory: source
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk              dist/app-universal-release.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk    dist/
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk  dist/
+
+          BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+          EXPECTED="ae74add09a58f8063ab45e18c1b99e9e1352acf2f46af67789d74f097e44fa6b"
+
+          "$BT/aapt" dump badging dist/app-universal-release.apk | grep -E "^package:|native-code" || true
+
+          for apk in dist/*.apk; do
+            CERT="$("$BT/apksigner" verify --print-certs "$apk" \
+              | grep 'certificate SHA-256 digest' | head -1 \
+              | awk -F': ' '{print $2}' | tr -d '[:space:]' | tr 'A-F' 'a-f')"
+            echo "$apk -> $CERT"
+            if [ "$CERT" != "$EXPECTED" ]; then
+              echo "SIGNING GUARD FAILED [$apk]: $CERT != $EXPECTED — DO NOT RELEASE"
+              exit 1
+            fi
+          done
+          echo "signing guard OK: production identity confirmed on all 3 APKs"
+          cd dist
+          sha256sum *.apk | tee SHA256SUMS.txt
+          md5sum app-universal-release.apk
+          du -h *.apk
+
+      - name: Publish Release v0.1.0 (public distribution)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view v0.1.0 >/dev/null 2>&1 && gh release delete v0.1.0 --yes --cleanup-tag || true
+          gh release create v0.1.0 \
+            source/dist/app-universal-release.apk \
+            source/dist/app-arm64-v8a-release.apk \
+            source/dist/app-armeabi-v7a-release.apk \
+            source/dist/SHA256SUMS.txt \
+            --title "DRS NEXORA v0.1.0 — النسخة التجريبية الأولى" \
+            --notes-file release-notes.md \
+            --latest
