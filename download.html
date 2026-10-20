@@ -15,10 +15,22 @@
   .dl-btn .arrow { margin-inline-start: auto; font-size: 20px; }
   .dl-primary { background: linear-gradient(135deg, #7C3AED, #22D3EE); color: #fff; }
   .dl-secondary { background: rgba(167,139,250,.12); color: var(--text, #EDE9FE); border: 1px solid rgba(167,139,250,.35); }
+  .dl-match { outline: 2px solid #22D3EE; outline-offset: 2px; }
+  .dl-badge { display: inline-block; background: #22D3EE; color: #06283D; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 800; margin-inline-start: 8px; vertical-align: middle; }
   .ver-badge { display: inline-block; background: rgba(34,211,238,.12); color: #22D3EE; border-radius: 999px; padding: 4px 14px; font-size: 12.5px; font-weight: 700; margin-top: 8px; }
   .hash-note { direction: ltr; text-align: left; font-size: 11px; color: rgba(185,175,224,.55); word-break: break-all; margin-top: 10px; }
   .mirror-line { font-size: 12.5px; margin-top: 16px; text-align: center; color: rgba(185,175,224,.8); }
   .mirror-line a { color: #22D3EE; text-decoration: none; }
+  /* شريط توافق الهاتف — يُملأ آلياً حسب جهاز الزائر */
+  .compat-banner { display: none; margin-top: 14px; padding: 12px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.7; font-weight: 500; }
+  .compat-banner.ok   { display: block; background: rgba(52,211,153,.10); border: 1px solid rgba(52,211,153,.40); color: #6EE7B7; }
+  .compat-banner.warn { display: block; background: rgba(251,191,36,.10); border: 1px solid rgba(251,191,36,.40); color: #FCD34D; }
+  .compat-banner.stop { display: block; background: rgba(248,113,113,.12); border: 1px solid rgba(248,113,113,.45); color: #FCA5A5; }
+  .compat-banner .cb-title { font-weight: 800; display: block; margin-bottom: 2px; }
+  details.troubleshoot { margin-top: 14px; background: rgba(167,139,250,.08); border: 1px solid rgba(167,139,250,.25); border-radius: 12px; padding: 10px 14px; font-size: 13px; color: rgba(237,233,254,.85); }
+  details.troubleshoot summary { cursor: pointer; font-weight: 700; color: #C4B5FD; }
+  details.troubleshoot ul { margin: 8px 0 2px; padding-inline-start: 18px; line-height: 1.8; }
+  .req-line { font-size: 12.5px; margin-top: 10px; color: rgba(185,175,224,.75); }
 </style>
 </head>
 <body>
@@ -30,7 +42,7 @@
     </linearGradient></defs>
     <rect width="64" height="64" rx="16" fill="url(#g)"/>
     <path d="M32 14c-10.5 0-19 7.4-19 16.5 0 5.2 2.8 9.8 7.2 12.9L18 52l9.7-4.2c1.4.3 2.8.5 4.3.5 10.5 0 19-7.4 19-16.8S42.5 14 32 14z" fill="#fff"/>
-    <path d="M26 30.5l4.5 4.5L39 26" stroke="#7C3AED" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d='M26 30.5l4.5 4.5L39 26' stroke="#7C3AED" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
   <div class="brand-name">DRS NEXORA</div>
   <div class="brand-tagline">مراسلة مشفّرة طرف-لطرف • خاصة بك 100%</div>
@@ -43,37 +55,49 @@
       اختر النسخة المناسبة لهاتفك. الضغط على الزر يبدأ التنزيل فوراً
       <b>دون صفحات وسيطة أو إعلانات</b>.
     </p>
+    <p class="req-line">المتطلبات: <b>أندرويد 7.0 فما فوق</b> — المساحة 150 MB — توزيع مباشر خارج متجر Play.</p>
 
-    <a class="dl-btn dl-primary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v0.1.0/app-universal-release.apk" download>
+    <div id="compat" class="compat-banner" aria-live="polite"></div>
+
+    <a id="btn-universal" class="dl-btn dl-primary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v0.1.0/app-universal-release.apk" download>
       <span>⬇</span>
-      <span>الموصى بها — تعمل على جميع الهواتف بدون استثناء
-        <span class="arch">Universal (arm64 + ARMv7) • 74.8 MB • v0.1.0</span>
+      <span id="lbl-universal">الموصى بها — تعمل على جميع الهواتف بدون استثناء
+        <span class="arch">Universal (arm64 + ARMv7) • 62.6 MB • v0.1.0</span>
       </span>
       <span class="arrow">←</span>
     </a>
 
-    <a class="dl-btn dl-secondary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v0.1.0/app-arm64-v8a-release.apk" download>
+    <a id="btn-arm64" class="dl-btn dl-secondary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v0.1.0/app-arm64-v8a-release.apk" download>
       <span>⬇</span>
-      <span>للهواتف الحديثة فقط — أصغر حجماً
+      <span id="lbl-arm64">للهواتف الحديثة 64-بت — أصغر حجماً
         <span class="arch">ARM64 (arm64-v8a) • 38.5 MB • v0.1.0</span>
       </span>
       <span class="arrow">←</span>
     </a>
 
-    <a class="dl-btn dl-secondary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v0.1.0/app-armeabi-v7a-release.apk" download>
+    <a id="btn-v7a" class="dl-btn dl-secondary" href="https://github.com/CTO-DRS/nexora-verify/releases/download/v0.1.0/app-armeabi-v7a-release.apk" download>
       <span>⬇</span>
-      <span>للهواتف الأقدم (معالج 32-بت)
+      <span id="lbl-v7a">للهواتف الأقدم (معالج 32-بت)
         <span class="arch">ARMv7 (armeabi-v7a) • 32.1 MB • v0.1.0</span>
       </span>
       <span class="arrow">←</span>
     </a>
 
-    <p class="hash-note">SHA-256 (Universal): 2be4fbf931744de443db4239a69f5cd8a5fbf77a950e478639a2c5706a6ab831<br>MD5 (Universal): 0f4ea92686073ac748db24f492e6de39<br>SHA-256 (ARM64): 1aa1d0808e30896b4541cf97a570b51abade646ec020dfb5d106d63934143def<br>SHA-256 (ARMv7a): 47246fabd6d1cbb362907f0ddd34d1751c579c4aebee368a8c5b3d39265f0ad8</p>
+    <p class="hash-note">SHA-256 (Universal): 25ea6f429d67f9f6faf1077f9ee41065eb7ea9f215b37ef2aab348ffc2eb4839<br>MD5 (Universal): 1d380eecfdd1bbd5670ba84772872b02<br>SHA-256 (ARM64): e5421981c830bc0798b7ca6976b968e509b7f9485151982a79e9beac9e75ee14<br>SHA-256 (ARMv7a): 2840dd31cc281eb9961e8c3f13f9b3f5c22f8be8f0fe649e647a101edce670d3</p>
+
+    <details class="troubleshoot">
+      <summary>ظهرت رسالة «التطبيق غير متوافق مع هاتفك»؟ إليك الأسباب الثلاثة وحلولها</summary>
+      <ul>
+        <li><b>حزمة معمارية لا تطابق معالجك</b> — حمّلت مثلاً ARM64 على هاتف 32-بت، أو العكس. الحل: نزّل «الحزمة الشاملة» (الزر الأول) فهي تحوي المعماريتين معاً — الصفحة نفسها تختار لك الأنسب آلياً الآن.</li>
+        <li><b>نسخة أندرويد أقدم من 7.0</b> — التطبيق يتطلب أندرويد 7.0 فما فوق (أدوات البناء Flutter 3.35 تفرض API 24). إن كان هاتفك أندرويد 5 أو 6 فلا يمكن تثبيت هذه النسخة حالياً.</li>
+        <li><b>ملف تنزيله غير مكتمل</b> — تحقق أن حجم الملف بعد التنزيل يطابق الحجم المكتوب على الزر تماماً، وإن اختلف فأعد التنزيل.</li>
+      </ul>
+    </details>
 
     <div class="divider"></div>
 
     <ul class="steps">
-      <li><span class="num">1</span><span>إن سبق أن نزّلت APK ولم يُثبَّت: <b>احذف الملف القديم من هاتفك أولاً</b> ثم نزّل «النسخة الشاملة» (الزر الأول) — الحجم الصحيح بعد التنزيل <b>74.8 MB</b> تقريباً.</span></li>
+      <li><span class="num">1</span><span>إن سبق أن نزّلت APK ولم يُثبَّت: <b>احذف الملف القديم من هاتفك أولاً</b> ثم نزّل «النسخة الشاملة» (الزر الأول) — الحجم الصحيح بعد التنزيل <b>62.6 MB</b> تقريباً.</span></li>
       <li><span class="num">2</span><span>افتح الملف من شريط التنبيهات أو من تطبيق «الملفات». إن ظهرت رسالة «مصادر غير معروفة» فاسمح بها من الإعدادات.</span></li>
       <li><span class="num">3</span><span>إن ظهرت نافذة Play Protect اختر «تثبيت على أي حال / Install anyway» — هذا طبيعي لأن التطبيق يُوزَّع مباشرة خارج متجر Play.</span></li>
       <li><span class="num">4</span><span>إن كانت لديك نسخة قديمة مثبتة (v5.x أو أقدم): <b>ألغِ تثبيتها أولاً</b> — خط الإصدار الجديد v0.1.0 لا يقبل التثبيت فوقها. تنبيه: إلغاء التثبيت يحذف مفاتيح التشفير والمحادثات المحلية نهائياً، فتأكد من عدم حاجتك لما لم يُصدَّر.</span></li>
@@ -87,6 +111,82 @@
     نزّل التطبيق فقط من هذا الموقع أو من الروابط التي ترسلها إدارتك — أي نسخة من مصدر آخر قد تكون معدّلة.
   </p>
 </main>
+
+<script>
+(function () {
+  'use strict';
+  var banner = document.getElementById('compat');
+  function showBanner(cls, title, body) {
+    banner.className = 'compat-banner ' + cls;
+    banner.innerHTML = '<span class="cb-title"></span>';
+    banner.firstChild.textContent = title;
+    if (body) banner.appendChild(document.createTextNode(body));
+  }
+  function tagButton(btnId, lblId) {
+    var btn = document.getElementById(btnId);
+    btn.classList.add('dl-match');
+    var b = document.createElement('span');
+    b.className = 'dl-badge';
+    b.textContent = 'الأفضل لهاتفك ✓';
+    document.getElementById(lblId).appendChild(b);
+  }
+
+  // 1) نسخة أندرويد من User-Agent
+  var m = navigator.userAgent.match(/Android\s+(\d+)(?:\.(\d+))?/i);
+  var androidMajor = m ? parseInt(m[1], 10) : null;
+  var androidMinor = m && m[2] ? parseInt(m[2], 10) : 0;
+
+  // 2) المعمارية عبر User-Agent Client Hints (كروم أندرويد 90+)
+  var archPromise = Promise.resolve(null);
+  try {
+    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+      archPromise = navigator.userAgentData
+        .getHighEntropyValues(['architecture', 'bitness'])
+        .then(function (h) {
+          var a = (h.architecture || '').toLowerCase();
+          if (a.indexOf('arm') !== -1) return h.bitness === '32' ? 'v7a' : 'arm64';
+          if (a.indexOf('x86') !== -1 || a.indexOf('x64') !== -1) return 'x86';
+          return null;
+        })
+        .catch(function () { return null; });
+    }
+  } catch (e) { /* تجاهل */ }
+
+  archPromise.then(function (arch) {
+    // أ) أندرويد أقدم من 7.0: التطبيق لا يعمل — منع التنزيل
+    if (androidMajor !== null && androidMajor < 7) {
+      showBanner('stop',
+        'هاتفك يعمل بأندرويد ' + androidMajor + '.' + androidMinor + ' — للأسف التطبيق لا يدعمه',
+        ' يتطلب DRS NEXORA أندرويد 7.0 فما فوق. أزرار التنزيل معطّلة لأن التثبيت سيفشل على هذا الجهاز.');
+      ['btn-universal', 'btn-arm64', 'btn-v7a'].forEach(function (id) {
+        var b = document.getElementById(id);
+        b.removeAttribute('href');
+        b.style.opacity = '.45';
+        b.style.pointerEvents = 'none';
+      });
+      return;
+    }
+
+    // ب) المعمارية المكتشفة → وسم الزر الأنسب
+    if (arch === 'arm64') {
+      tagButton('btn-arm64', 'lbl-arm64');
+      showBanner('ok',
+        'تم التعرف على هاتفك: أندرويد ' + androidMajor + ' • معالج ARM 64-بت',
+        ' الزر الموسوم «الأفضل لهاتفك» يمنحك أصغر حجماً. وإن رغبت ببساطة أكبر أماناً فاختر الحزمة الشاملة — كلاهما يعمل.');
+    } else if (arch === 'v7a') {
+      tagButton('btn-v7a', 'lbl-v7a');
+      showBanner('ok',
+        'تم التعرف على هاتفك: أندرويد ' + androidMajor + ' • معالج ARM 32-بت',
+        ' الزر الموسوم «الأفضل لهاتفك» مخصص لمعالجك تحديداً. الحزمة الشاملة تعمل أيضاً.');
+    } else if (arch === 'x86') {
+      showBanner('warn',
+        'يبدو أنك تستخدم محاكي/جهاز بمعمارية x86',
+        ' الحزم الحالية موجهة لمعالجات ARM (كل الهواتف الحقيقية). على المحاكيات قد لا يعمل التطبيق.');
+    }
+    // كشف المعمارية غير متاح (فايرفوكس مثلاً) — تبقى الحزمة الشاملة موصى بها افتراضياً
+  });
+})();
+</script>
 
 </body>
 </html>
