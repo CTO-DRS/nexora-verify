@@ -36,7 +36,13 @@ jobs:
       - name: Install NDK + CMake
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;26.1.10909125" "cmake;3.22.1" "build-tools;34.0.0" >/dev/null
+          ok=0
+          for i in 1 2 3 4; do
+            echo "sdkmanager attempt $i..."
+            if "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;26.1.10909125" "cmake;3.22.1" "build-tools;34.0.0" >/dev/null; then ok=1; break; fi
+            sleep 20
+          done
+          [ "$ok" = 1 ] || { echo "sdkmanager failed after 4 attempts"; exit 1; }
           ls "$ANDROID_HOME/ndk/" "$ANDROID_HOME/cmake/"
 
       - uses: subosito/flutter-action@v2
