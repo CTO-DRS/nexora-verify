@@ -36,7 +36,7 @@ jobs:
       - name: Install NDK + CMake
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;26.1.10909125" "cmake;3.22.1" >/dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;26.1.10909125" "cmake;3.22.1" "build-tools;34.0.0" >/dev/null
           ls "$ANDROID_HOME/ndk/" "$ANDROID_HOME/cmake/"
 
       - uses: subosito/flutter-action@v2
@@ -76,7 +76,7 @@ jobs:
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk    dist/
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk  dist/
 
-          BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+          BT="$ANDROID_HOME/build-tools/34.0.0"
           EXPECTED="ae74add09a58f8063ab45e18c1b99e9e1352acf2f46af67789d74f097e44fa6b"
 
           "$BT/aapt" dump badging dist/app-universal-release.apk | grep -E "^package:|native-code" || true
@@ -84,7 +84,7 @@ jobs:
           for apk in dist/*.apk; do
             CERT="$("$BT/apksigner" verify --print-certs "$apk" \
               | grep 'certificate SHA-256 digest' | head -1 \
-              | awk -F': ' '{print $2}' | tr -d '[:space:]' | tr 'A-F' 'a-f')"
+              | awk '{print $NF}' | tr -d '[:space:]' | tr 'A-F' 'a-f')"
             echo "$apk -> $CERT"
             if [ "$CERT" != "$EXPECTED" ]; then
               echo "SIGNING GUARD FAILED [$apk]: $CERT != $EXPECTED — DO NOT RELEASE"
