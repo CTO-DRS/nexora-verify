@@ -30,13 +30,14 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # Flutter Gradle Plugin 3.35 يطلب NDK هذا الإصدار عند ضبط المشروع —
-      # غير متوفر مسبقاً على عدّة العدّاء، فنثبّته قبل البناء
-      - name: Install NDK (26.1.10909125)
+      # Flutter Gradle Plugin 3.35 يطلب NDK هذا الإصدار عند ضبط المشروع،
+      # وقابس record 6.x يبني كوداً أصلياً عبر CMake 3.22.1 —
+      # كلاهما غير متوفر مسبقاً على عدّة العدّاء، فنثبّتهما قبل البناء
+      - name: Install NDK + CMake
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;26.1.10909125" >/dev/null
-          ls "$ANDROID_HOME/ndk/"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;26.1.10909125" "cmake;3.22.1" >/dev/null
+          ls "$ANDROID_HOME/ndk/" "$ANDROID_HOME/cmake/"
 
       - uses: subosito/flutter-action@v2
         with:
