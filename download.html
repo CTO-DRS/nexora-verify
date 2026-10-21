@@ -31,6 +31,11 @@
   details.troubleshoot summary { cursor: pointer; font-weight: 700; color: #C4B5FD; }
   details.troubleshoot ul { margin: 8px 0 2px; padding-inline-start: 18px; line-height: 1.8; }
   .req-line { font-size: 12.5px; margin-top: 10px; color: rgba(185,175,224,.75); }
+
+  .mirror-box { margin-top: 16px; padding: 12px 14px; border: 1px dashed rgba(34,211,238,.45); border-radius: 12px; background: rgba(34,211,238,.05); }
+  .mirror-box .mb-title { font-weight: 800; font-size: 13.5px; color: #22D3EE; margin-bottom: 4px; }
+  .mirror-box .mb-note { font-size: 12px; color: rgba(185,175,224,.8); line-height: 1.7; margin: 6px 0 10px; }
+  .mirror-box .dl-btn { margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -93,6 +98,37 @@
         <li><b>ملف تنزيله غير مكتمل</b> — تحقق أن حجم الملف بعد التنزيل يطابق الحجم المكتوب على الزر تماماً، وإن اختلف فأعد التنزيل.</li>
       </ul>
     </details>
+    <details class="troubleshoot">
+      <summary>ظهرت رسالة «لم يتم تثبيت التطبيق لأن الحزمة تبدو غير صالحة»؟ الحل هنا</summary>
+      <ul>
+        <li><b>السبب الأول (الأشهر): الملف وصل ناقصاً.</b> تحقق من حجم الملف في تطبيق «الملفات»: نسخة ARM64 يجب أن تكون <b>40,411,090 بايت (38.5 MB)</b> بالضبط، و ARMv7 <b>33,702,330 بايت (32.1 MB)</b>، والشاملة <b>65,667,836 بايت (62.6 MB)</b>. أي رقم أصغر يعني تنزيلاً تالفًا: احذف الملف نهائيًا من الهاتف ثم أعد التنزيل عبر Wi-Fi مستقر ومن المتصفح مباشرة (بدون برامج تسريع التحميل).</li>
+        <li><b>السبب الثاني: مساحة التخزين.</b> تأكد من وجود مساحة فارغة أكبر من ضعف حجم الحزمة، فالتثبيت يحتاج مساحة إضافية لفك الحزمة.</li>
+        <li><b>السبب الثالث: تعارض مع نسخة سابقة.</b> إن كان حجم الملف صحيحًا بالبايت وظهرت الرسالة مجددًا: ألغِ تثبيت أي نسخة سابقة من DRS NEXORA على الهاتف ثم ثبّت الملف من جديد.</li>
+        <li><b>السبب الرابع: قناة GitHub.</b> نزّل من «الروابط البديلة المباشرة» (خوادم التطبيق) في المربع أسفل الأزرار.</li>
+      </ul>
+    </details>
+
+
+    
+    <div class="mirror-box">
+      <div class="mb-title">الروابط البديلة المباشرة — من خوادم التطبيق مباشرة</div>
+      <p class="mb-note">إذا توقف التنزيل من GitHub أو ظهرت رسالة «الحزمة تبدو غير صالحة» (ملف ناقص) فنزّل من هذه الروابط المباشرة:</p>
+      <a class="dl-btn dl-secondary" href="https://hnfdfzuyrphjcmgezoyh.supabase.co/storage/v1/object/public/downloads/v0.1.1/app-arm64-v8a-release.apk" download>
+        <span>⬇</span>
+        <span>بديل ARM64 مباشر
+          <span class="arch">ARM64 (arm64-v8a) • 38.5 MB • v0.1.1</span>
+        </span>
+        <span class="arrow">←</span>
+      </a>
+      <a class="dl-btn dl-secondary" href="https://hnfdfzuyrphjcmgezoyh.supabase.co/storage/v1/object/public/downloads/v0.1.1/app-armeabi-v7a-release.apk" download>
+        <span>⬇</span>
+        <span>بديل ARMv7 مباشر
+          <span class="arch">ARMv7 (armeabi-v7a) • 32.1 MB • v0.1.1</span>
+        </span>
+        <span class="arrow">←</span>
+      </a>
+      <p class="mb-note">الحزمة الشاملة (62.6 MB) متوفرة عبر رابط GitHub أعلاه.</p>
+    </div>
 
     <div class="divider"></div>
 
