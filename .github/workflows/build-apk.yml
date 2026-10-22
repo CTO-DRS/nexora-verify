@@ -17,11 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout private source (drs-nexora @ v0.1.2)
+      - name: Checkout private source (drs-nexora @ v0.1.3)
         uses: actions/checkout@v4
         with:
           repository: CTO-DRS/drs-nexora
-          ref: v0.1.2
+          ref: v0.1.3
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
           path: source
 
@@ -103,16 +103,16 @@ jobs:
           md5sum app-universal-release.apk
           du -h *.apk
 
-      - name: Publish Release v0.1.2 (public distribution)
+      - name: Publish Release v0.1.3 (public distribution)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view v0.1.2 >/dev/null 2>&1 && gh release delete v0.1.2 --yes --cleanup-tag || true
-          gh release create v0.1.2 \
+          gh release view v0.1.3 >/dev/null 2>&1 && gh release delete v0.1.3 --yes --cleanup-tag || true
+          gh release create v0.1.3 \
             source/dist/app-universal-release.apk \
             source/dist/app-arm64-v8a-release.apk \
             source/dist/app-armeabi-v7a-release.apk \
             source/dist/SHA256SUMS.txt \
-            --title "DRS NEXORA v0.1.2 — الواجهة النيونية وقاعدة التنقل الجديدة" \
+            --title "DRS NEXORA v0.1.3 — حزم أخف وأوثق للتنزيل" \
             --notes-file release-notes.md \
             --latest
